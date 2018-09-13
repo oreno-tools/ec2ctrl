@@ -2,7 +2,7 @@
 
 ## これなに
 
-EC2 一覧の取得, 起動, 停止を行うワンバイナリツールでごわす.
+EC2 一覧の取得, 起動, 停止を行うワンバイナリツールでごわす. [jq](https://stedolan.github.io/jq/) や [direnv](https://github.com/direnv/direnv) 等と併用すると貴方の EC2 ライフを少しだけ豊かなものにしてくれるでしょう.
 
 ## 使い方
 
