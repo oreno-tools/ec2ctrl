@@ -43,19 +43,19 @@ Usage of ec2ctrl:
 ### EC2 一覧の取得
 
 ```sh
-$ ec2Ctrl -profile=your-profile # -profile を指定しない場合, 環境変数又は default のプロファイルを読み込む
+$ ec2ctrl -profile=your-profile # -profile を指定しない場合, 環境変数又は default のプロファイルを読み込む
 ```
 
 `-csv` オプションを付与した場合, カンマ区切りで出力する.
 
 ```sh
-$ ec2Ctrl -csv
+$ ec2ctrl -csv
 ```
 
 `-json` オプションを付与した場合, JSON フォーマットで出力する.
 
 ```sh
-$ ec2Ctrl -json
+$ ec2ctrl -json
 ```
 
 [jq](https://stedolan.github.io/jq/) 等との併用で対象の絞り込みも可能.
@@ -67,22 +67,26 @@ $ ec2ctrl -json | jq '.instances[]|select(.name == "your-instance-tag-name")'
 ### EC2 の起動
 
 ```sh
-$ ec2Ctrl -start -instances=foo,bar
+$ ec2ctrl -start -instances=foo,bar
 上記のインスタンスを操作しますか?(y/n): y
 EC2 を起動します.
 i-xxxxxxxxxxxxxxxxx を起動しました.
 i-yyyyyyyyyyyyyyyyy を起動しました.
 ```
 
+`-instances` は EC2 インスタンス ID 又はインスタンスに付与されている `Name` タグを指定可能.
+
 ### EC2 の停止
 
 ```sh
-$ ec2Ctrl -stop -instances=foo,bar
+$ ec2ctrl -stop -instances=foo,bar
 上記のインスタンスを操作しますか?(y/n): y
 EC2 を停止します.
 i-xxxxxxxxxxxxxxxxx を停止しました.
 i-yyyyyyyyyyyyyyyyy を停止しました.
 ```
+
+`-instances` は EC2 インスタンス ID 又はインスタンスに付与されている `Name` タグを指定可能.
 
 ## Todo
 
