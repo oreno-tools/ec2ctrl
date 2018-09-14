@@ -152,6 +152,9 @@ func listInstances(ec2Client *ec2.EC2, instances []*string) {
             if i.PublicIpAddress == nil {
                 i.PublicIpAddress = aws.String("Not assignment")
             }
+            if i.PrivateIpAddress == nil {
+                i.PrivateIpAddress = aws.String("Not assignment")
+            }
             instance_status, system_status := getInstanceStatus(ec2Client, *i.InstanceId)
             instance := []string{
                 tag_name,
