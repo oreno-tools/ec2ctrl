@@ -11,6 +11,14 @@ EC2 一覧の取得, 起動, 停止を行うワンバイナリツールでごわ
 1. お使いの OS に応じて, osx, linux, win ディレクトリから ec2ctrl のバイナリをダウンロードする
 2. ec2ctrl をパスの通ったディレクトリにコピー又は移動する
 
+
+https://github.com/inokappa/ec2ctrl/releases から環境に応じたバイナリをダウンロードしてください.
+
+```
+wget https://github.com/inokappa/ec2ctrl/releases/download/v0.0.7/ec2ctrl_darwin_amd64 -O ~/bin/ec2ctrl
+chmod +x ~/bin/ec2ctrl
+```
+
 ### ヘルプ
 
 ```sh
