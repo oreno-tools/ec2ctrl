@@ -7,9 +7,7 @@ fi
 
 _BIN_NAME=${1%.*}
 
-rm ./linux/${_BIN_NAME}
-GOOS=linux GOARCH=amd64 gom build -ldflags="-w" -o ./linux/${_BIN_NAME}
-rm ./win/${_BIN_NAME}.exe
-GOOS=windows GOARCH=amd64 gom build -ldflags="-w" -o ./win/${_BIN_NAME}.exe
-rm ./osx/${_BIN_NAME}
-GOOS=darwin GOARCH=amd64 gom build -ldflags="-w" -o ./osx/${_BIN_NAME}
+rm ./pkg/*
+GOOS=linux GOARCH=amd64 gom build -ldflags="-w" -o ./pkg/${_BIN_NAME}_linux_amd64
+GOOS=windows GOARCH=amd64 gom build -ldflags="-w" -o ./pkg/${_BIN_NAME}_windows_amd64.exe
+GOOS=darwin GOARCH=amd64 gom build -ldflags="-w" -o ./pkg/${_BIN_NAME}_darwin_amd64
