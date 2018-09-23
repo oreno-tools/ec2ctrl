@@ -17,7 +17,10 @@ import (
     "github.com/olekukonko/tablewriter"
 )
 
-const AppVersion = "0.0.6"
+const (
+    AppVersion = "0.0.7"
+    MaxResults = 1000
+)
 
 var (
     argProfile = flag.String("profile", "", "Profile 名を指定.")
@@ -133,42 +136,50 @@ func getInstanceStatus(ec2Client *ec2.EC2, instanceId string) (string, string) {
 func listInstances(ec2Client *ec2.EC2, instances []*string) {
     params := &ec2.DescribeInstancesInput {
         InstanceIds: instances,
-    }
-    res, err := ec2Client.DescribeInstances(params)
-    if err != nil {
-        fmt.Println(err.Error())
-        os.Exit(1)
+        MaxResults: aws.Int64(MaxResults),
     }
 
     allInstances := [][]string{}
-    for _, r := range res.Reservations {
-        for _, i := range r.Instances {
-            var tag_name string
-            for _, t := range i.Tags {
-                if *t.Key == "Name" {
-                    tag_name = *t.Value
-                }
-            }
-            if i.PublicIpAddress == nil {
-                i.PublicIpAddress = aws.String("Not assignment")
-            }
-            if i.PrivateIpAddress == nil {
-                i.PrivateIpAddress = aws.String("Not assignment")
-            }
-            instance_status, system_status := getInstanceStatus(ec2Client, *i.InstanceId)
-            instance := []string{
-                tag_name,
-                *i.InstanceId,
-                *i.InstanceType,
-                *i.Placement.AvailabilityZone,
-                *i.PrivateIpAddress,
-                *i.PublicIpAddress,
-                *i.State.Name,
-                instance_status,
-                system_status,
-            }
-            allInstances = append(allInstances, instance)
+    for {
+        res, err := ec2Client.DescribeInstances(params)
+        if err != nil {
+            fmt.Println(err.Error())
+            os.Exit(1)
         }
+        for _, r := range res.Reservations {
+            for _, i := range r.Instances {
+                var tag_name string
+                for _, t := range i.Tags {
+                    if *t.Key == "Name" {
+                        tag_name = *t.Value
+                    }
+                }
+                if i.PublicIpAddress == nil {
+                    i.PublicIpAddress = aws.String("Not assignment")
+                }
+                if i.PrivateIpAddress == nil {
+                    i.PrivateIpAddress = aws.String("Not assignment")
+                }
+                instance_status, system_status := getInstanceStatus(ec2Client, *i.InstanceId)
+                instance := []string{
+                    tag_name,
+                    *i.InstanceId,
+                    *i.InstanceType,
+                    *i.Placement.AvailabilityZone,
+                    *i.PrivateIpAddress,
+                    *i.PublicIpAddress,
+                    *i.State.Name,
+                    instance_status,
+                    system_status,
+                }
+                allInstances = append(allInstances, instance)
+            }
+        }
+        if res.NextToken == nil {
+            break
+        }
+        params.SetNextToken(*res.NextToken)
+        continue
     }
 
     if *argCsv == true {
