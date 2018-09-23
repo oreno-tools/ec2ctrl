@@ -1,3 +1,4 @@
 .envrc
 debug/
 vendor/
+pkg/
