@@ -18,8 +18,7 @@ import (
 )
 
 const (
-    AppVersion = "0.0.7"
-    MaxResults = 1000
+    AppVersion = "0.0.8"
 )
 
 var (
@@ -136,7 +135,6 @@ func getInstanceStatus(ec2Client *ec2.EC2, instanceId string) (string, string) {
 func listInstances(ec2Client *ec2.EC2, instances []*string) {
     params := &ec2.DescribeInstancesInput {
         InstanceIds: instances,
-        MaxResults: aws.Int64(MaxResults),
     }
 
     allInstances := [][]string{}
