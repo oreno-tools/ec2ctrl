@@ -18,7 +18,7 @@ import (
 )
 
 const (
-    AppVersion = "0.0.8"
+    AppVersion = "0.0.9"
 )
 
 var (
@@ -33,6 +33,7 @@ var (
     argVersion = flag.Bool("version", false, "バージョンを出力.")
     argCsv = flag.Bool("csv", false, "CSV 形式で出力する")
     argJson = flag.Bool("json", false, "JSON 形式で出力する")
+    argNameTagFilter = flag.String("tag-filter", "", "指定したキーワードを用いてインスタンスの出力を絞り込む. (Name タグを検索する)")
 )
 
 type Results struct {
@@ -170,7 +171,13 @@ func listInstances(ec2Client *ec2.EC2, instances []*string) {
                     instance_status,
                     system_status,
                 }
-                allInstances = append(allInstances, instance)
+                if *argNameTagFilter == "" {
+                    allInstances = append(allInstances, instance)
+                } else {
+                    if strings.Contains(tag_name, *argNameTagFilter) {
+                        allInstances = append(allInstances, instance)
+                    }
+                }
             }
         }
         if res.NextToken == nil {
