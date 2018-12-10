@@ -34,8 +34,6 @@ Usage of ec2ctrl:
         Region 名を指定. (default "ap-northeast-1")
   -start
         Instance を起動.
-  -state
-        Instance の状態を出力.
   -stop
         Instance を停止.
   -tags string
@@ -67,6 +65,14 @@ $ ec2ctrl -json
 ```sh
 $ ec2ctrl -json | jq '.instances[]|select(.name == "your-instance-tag-name")'
 ```
+
+### EC2 状態確認
+
+```sh
+$ ec2ctrl -instances=foo,bar
+```
+
+`-instances` は EC2 インスタンス ID 又はインスタンスに付与されている `Name` タグを指定可能.
 
 ### EC2 の起動
 
