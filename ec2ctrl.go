@@ -18,7 +18,7 @@ import (
 )
 
 const (
-	AppVersion = "0.1.0"
+	AppVersion = "0.1.1"
 )
 
 var (
@@ -29,6 +29,7 @@ var (
 	argTags          = flag.String("tags", "", "Tag Key 及び Tag Value を指定.")
 	argStart         = flag.Bool("start", false, "Instance を起動.")
 	argStop          = flag.Bool("stop", false, "Instance を停止.")
+	argType          = flag.String("type", "", "Instance タイプを指定.")
 	argVersion       = flag.Bool("version", false, "バージョンを出力.")
 	argCsv           = flag.Bool("csv", false, "CSV 形式で出力する")
 	argJson          = flag.Bool("json", false, "JSON 形式で出力する")
@@ -224,6 +225,24 @@ func stopInstances(ec2Client *ec2.EC2, instances []*string) {
 	}
 }
 
+func modifyInstances(ec2Client *ec2.EC2, instances []*string, instance_type string) {
+	for _, instance := range instances {
+		params := &ec2.ModifyInstanceAttributeInput{
+			InstanceId: instance,
+			InstanceType: &ec2.AttributeValue{
+				Value: aws.String(instance_type),
+			},
+		}
+		// fmt.Println(params)
+		_, err := ec2Client.ModifyInstanceAttribute(params)
+		if err != nil {
+			fmt.Println(err.Error())
+			os.Exit(1)
+		}
+		fmt.Printf("%s のインスタンスタイプを %s に変更しました.\n", *instance, instance_type)
+	}
+}
+
 func stateInstances(ec2Client *ec2.EC2, instances []*string) {
 	listInstances(ec2Client, instances)
 }
@@ -302,6 +321,8 @@ func main() {
 			ctrlInstances(ec2Client, instances, "start")
 		} else if *argStop {
 			ctrlInstances(ec2Client, instances, "stop")
+		} else if *argType != "" {
+			modifyInstances(ec2Client, instances, *argType)
 		} else {
 			stateInstances(ec2Client, instances)
 		}
